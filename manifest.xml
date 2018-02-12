@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE plugin SYSTEM "manifest.dtd">
+<plugin version="2">
+	<info>
+		<version>0.1.0</version>
+		<name>autodelete</name>
+		<title>Automatic delete</title>
+		<author>bytemine GmbH</author>
+		<authorURL>http://www.bytemine.net</authorURL>
+		<description>Plugin to configure automatic deletion of items after a configured period</description>
+	</info>
+        <config>
+                <configfile>config.php</configfile>
+        </config>
+        <translations>
+                <translationsdir>languages</translationsdir>
+        </translations>
+	<components>
+		<component>
+			<info>
+				<name>autodeleteplugin</name>
+				<title>AutodeletePlugin</title>
+				<author>Daniel Rauer</author>
+				<description>Automatic delete</description>
+			</info>
+			<files>
+				<client>
+					<clientfile load="release">js/data/Configuration.js</clientfile>
+					<clientfile load="release">js/data/ResponseHandler.js</clientfile>
+					<clientfile load="release">js/AutodeletePlugin.js</clientfile>
+					<clientfile load="release">js/settings/SettingsAutodeleteCategory.js</clientfile>
+					<clientfile load="release">js/settings/SettingsAutodeleteWidget.js</clientfile>
+				</client>
+				<server>
+					<serverfile>php/plugin.autodelete.php</serverfile>
+					<serverfile type="module" module="autodeletemodule">php/class.autodeletemodule.php</serverfile>
+				</server>
+				<resources>
+          <resourcefile load="release">resources/css/autodelete.css</resourcefile>
+				</resources>
+      </files>
+		</component>
+	</components>
+</plugin>
