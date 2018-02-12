@@ -22,7 +22,7 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 				xtype: "displayfield",
 				hideLabel: true,
 				value: dgettext("plugin_autodelete", "Maximaler Zeitraum: " + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/max_period") + " Tage") + "<br />" + "<br />" +
-					     dgettext("plugin_autodelete", "Aktuell eingesteller Zeitraum: ") + "<span id=\"autodelete_period\">" + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period") + "</span>" + " Tage"
+					     dgettext("plugin_autodelete", "Aktuell eingestellter Zeitraum: ") + "<span id=\"autodelete_period\">" + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period") + "</span>" + " Tage"
 			}, {
 				xtype: "button",
 				text: dgettext("plugin_autodelete", "Einstellung ändern"),
