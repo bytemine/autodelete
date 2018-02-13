@@ -6,5 +6,10 @@ Tested on:
 
 Release notes:
 
+0.1.1
+- Separation of periods by types email, task and appointment.
+- Maximum period can now be set.
+- Only accept integers as period.
+
 0.1.0
 - First version.
