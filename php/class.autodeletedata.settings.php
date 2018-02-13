@@ -35,8 +35,28 @@ class AutodeleteData {
 	 *
 	 * @param boolean $period
 	 */
-	public static function setPeriod($period) {
-		$GLOBALS["settings"]->set("zarafa/v1/plugins/autodelete/period", $period);
+	public static function setPeriodEmail($period) {
+		$GLOBALS["settings"]->set("zarafa/v1/plugins/autodelete/period_email", $period);
+		$GLOBALS["settings"]->saveSettings();
+	}
+
+	/**
+	 * Set period
+	 *
+	 * @param boolean $period
+	 */
+	public static function setPeriodTask($period) {
+		$GLOBALS["settings"]->set("zarafa/v1/plugins/autodelete/period_task", $period);
+		$GLOBALS["settings"]->saveSettings();
+	}
+
+	/**
+	 * Set period
+	 *
+	 * @param boolean $period
+	 */
+	public static function setPeriodAppointment($period) {
+		$GLOBALS["settings"]->set("zarafa/v1/plugins/autodelete/period_appointment", $period);
 		$GLOBALS["settings"]->saveSettings();
 	}
 

@@ -45,8 +45,14 @@ class AutodeleteModule extends Module {
 						case "isactivated":
 							$result = $this->isActivated();
 							break;
-						case "setperiod":
-							$result = $this->setPeriod($actionData);
+						case "setperiodemail":
+							$result = $this->setPeriodEmail($actionData);
+							break;
+					  case "setperiodtask":
+							$result = $this->setPeriodTask($actionData);
+							break;
+						case "setperiodappointment":
+							$result = $this->setPeriodAppointment($actionData);
 							break;
 						default:
 							$this->handleUnknownActionType($actionType);
@@ -96,21 +102,74 @@ class AutodeleteModule extends Module {
 		return true;
   }
 
+  private function is_allowed($period, $max_period) {
+    if (strpos($period, '.') === false && is_numeric($period) && is_int(intval($period)) && intval($period) <= $max_period && intval($period) > 0) {
+	    return true;
+	  }
+	  return false;
+  }
+
   /**
-   * Verify code
+   * Set email period
    *
    * @access private
    * @return boolean
    */
-	private function setPeriod($actionData) {
-		$period = $actionData['period'];
+	private function setPeriodEmail($actionData) {
     $isPeriodOK = false;
-		if (strpos($period, '.') === false && is_numeric($period) && is_int(intval($period)) && intval($period) <= 60 && intval($period) > 0) {
-		  AutodeleteData::setPeriod($period);
+		$period = $actionData['period'];
+		if($this->is_allowed($period, PLUGIN_AUTODELETE_MAX_PERIOD_EMAIL)) {
+		  AutodeleteData::setPeriodEmail($period);
 		  $isPeriodOK = true;
 		}
+
 		$response['isPeriodOK'] = $isPeriodOK;
 		$response['period'] = $period;
+		$response['type'] = "email";
+		$this->addActionData("setperiod", $response);
+		$GLOBALS["bus"]->addData($this->getResponseData());
+		return true;
+	}
+
+  /**
+   * Set task period
+   *
+   * @access private
+   * @return boolean
+   */
+	private function setPeriodTask($actionData) {
+    $isPeriodOK = false;
+		$period = $actionData['period'];
+		if($this->is_allowed($period, PLUGIN_AUTODELETE_MAX_PERIOD_TASK)) {
+		  AutodeleteData::setPeriodTask($period);
+		  $isPeriodOK = true;
+		}
+
+		$response['isPeriodOK'] = $isPeriodOK;
+		$response['period'] = $period;
+		$response['type'] = "task";
+		$this->addActionData("setperiod", $response);
+		$GLOBALS["bus"]->addData($this->getResponseData());
+		return true;
+	}
+
+  /**
+   * Set appointment period
+   *
+   * @access private
+   * @return boolean
+   */
+	private function setPeriodAppointment($actionData) {
+    $isPeriodOK = false;
+		$period = $actionData['period'];
+		if($this->is_allowed($period, PLUGIN_AUTODELETE_MAX_PERIOD_APPOINTMENT)) {
+		  AutodeleteData::setPeriodAppointment($period);
+		  $isPeriodOK = true;
+		}
+
+		$response['isPeriodOK'] = $isPeriodOK;
+		$response['period'] = $period;
+		$response['type'] = "appointment";
 		$this->addActionData("setperiod", $response);
 		$GLOBALS["bus"]->addData($this->getResponseData());
 		return true;

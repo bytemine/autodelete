@@ -15,13 +15,33 @@
 define('PLUGIN_AUTODELETE_ACTIVATE', true);
 
 /**
- * Default period after which elements are deleted
+ * Default period after which emails are deleted
  */
-define('PLUGIN_AUTODELETE_DEFAULT_PERIOD', 30);
+define('PLUGIN_AUTODELETE_DEFAULT_PERIOD_EMAIL', 30);
 
 /**
- * Maximum period after which elements are deleted
+ * Maximum period after which emails are deleted
  */
-define('PLUGIN_AUTODELETE_MAX_PERIOD', 60);
+define('PLUGIN_AUTODELETE_MAX_PERIOD_EMAIL', 60);
+
+/**
+ * Default period after which tasks are deleted
+ */
+define('PLUGIN_AUTODELETE_DEFAULT_PERIOD_TASK', 30);
+
+/**
+ * Maximum period after which tasks are deleted
+ */
+define('PLUGIN_AUTODELETE_MAX_PERIOD_TASK', 60);
+
+/**
+ * Default period after which appointments are deleted
+ */
+define('PLUGIN_AUTODELETE_DEFAULT_PERIOD_APPOINTMENT', 30);
+
+/**
+ * Maximum period after which appointments are deleted
+ */
+define('PLUGIN_AUTODELETE_MAX_PERIOD_APPOINTMENT', 60);
 
 ?>

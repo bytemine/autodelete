@@ -66,8 +66,12 @@ class PluginAutodelete extends Plugin {
 					'plugins' => Array(
 						'autodelete' => Array(
 							'activate' => PLUGIN_AUTODELETE_ACTIVATE,
-							'period' => PLUGIN_AUTODELETE_DEFAULT_PERIOD,
-							'max_period' => PLUGIN_AUTODELETE_MAX_PERIOD
+							'period_email' => PLUGIN_AUTODELETE_DEFAULT_PERIOD_EMAIL,
+							'period_task' => PLUGIN_AUTODELETE_DEFAULT_PERIOD_TASK,
+							'period_appointment' => PLUGIN_AUTODELETE_DEFAULT_PERIOD_APPOINTMENT,
+							'max_period_email' => PLUGIN_AUTODELETE_MAX_PERIOD_EMAIL,
+							'max_period_task' => PLUGIN_AUTODELETE_MAX_PERIOD_TASK,
+							'max_period_appointment' => PLUGIN_AUTODELETE_MAX_PERIOD_APPOINTMENT
 						)
 					)
 				)
