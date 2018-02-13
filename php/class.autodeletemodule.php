@@ -105,7 +105,7 @@ class AutodeleteModule extends Module {
 	private function setPeriod($actionData) {
 		$period = $actionData['period'];
     $isPeriodOK = false;
-		if (is_numeric($period) && intval($period) <= PLUGIN_AUTODELETE_MAX_PERIOD && intval($period) > 0) {
+		if (strpos($period, '.') === false && is_numeric($period) && is_int(intval($period)) && intval($period) <= 60 && intval($period) > 0) {
 		  AutodeleteData::setPeriod($period);
 		  $isPeriodOK = true;
 		}
