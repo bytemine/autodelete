@@ -117,15 +117,6 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
           f.innerHTML = a.period;
         }
       }
-
-			Zarafa.common.dialogs.MessageBox.show({
-                                title: dgettext("plugin_autodelete", "Bestätigung"),
-                                msg: dgettext("plugin_autodelete", "Der neue Zeitraum von " + a.period + " Tagen wurde gespeichert."),
-                                icon: Zarafa.common.dialogs.MessageBox.INFO,
-                                buttons: Zarafa.common.dialogs.MessageBox.OK,
-                                scope: this,
-				width: 350
-      })
 		} else {
 			Zarafa.common.dialogs.MessageBox.show({
 				title: dgettext("plugin_autodelete", "Fehler"),
