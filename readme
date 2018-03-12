@@ -6,6 +6,9 @@ Tested on:
 
 Release notes:
 
+0.1.2
+- Do not show a success popup, as the user still needs to apply the change manually.
+
 0.1.1
 - Separation of periods by types email, task and appointment.
 - Maximum period can now be set.
