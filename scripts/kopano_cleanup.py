@@ -17,12 +17,25 @@ import struct
 opts = None
 config = None
 logfile = sys.stdout
+errfile = sys.stderr
 
 
 def log(s):
   pfx = '' if logfile == sys.stdout else time.ctime() + ' - '
   logfile.write(pfx + s.encode('UTF-8') + '\n')
 
+def err(s):
+  pfx = '' if errfile == sys.stderr else time.ctime() + ' - '
+  errfile.write(pfx + s.encode('UTF-8') + '\n')
+
+def dumpitem(p, i):
+  try:
+    errfile.write(u'\n========\nFolder: {}\nEntry:  {}\n========\n'.format(p, i.entryid))
+    for p in i:
+      errfile.write(u' * {:32.32} | {:.128}\n'.format(p.strid, p.strval.encode('unicode_escape')))
+    errfile.write('========\n\n')
+  except:
+    err('\n******** failed to dump item ********\n')
 
 def folder_path(f, r):
   n = f.name
@@ -34,9 +47,9 @@ def folder_path(f, r):
 # delete item if timestamp older than keeptime
 #
 def scrub_item(f, i, kt, ts):
-  global opts
   now = datetime.datetime.now()
   if ts < now and (now - ts).days > kt:
+    # when we get here, message_class property exists
     log(u'DEL ({} >{}d) ts = {}, subject = "{}"'.format(i.message_class, kt, ts, i.subject))
     if not opts.dry_run:
       pass # f.delete(i, soft=True)
@@ -48,7 +61,7 @@ def scrub_item(f, i, kt, ts):
 def scrub_message(f, i, kt):
   ts = i.received if i.received else i.created
   if not ts:
-    log('WARNING: missing timestamp for ' + p + '/' + i.subject)
+    err('WARNING: missing timestamp, ignoring: ' + p + '/' + i.subject)
   else:
     scrub_item(f, i, kt, ts)
 
@@ -64,13 +77,15 @@ def scrub_appointment(f, i, kt):
       try:
         ts = i.recurrence._end
       except Exception as e:
-        log(u'{} {}'.format(type(e), e))
-        log(u'broken recurrence, ignoring appointment: {}'.format(i.subject))
+        err(u'{} {}'.format(type(e), e))
+        err(u'broken recurrence, ignoring appointment: {}'.format(i.subject))
         return
     else:
       ts = i.end
-  except:
-    ts = i.end
+  except Exception as e:
+    err(u'{} {}'.format(type(e), e))
+    err(u'ignoring broken appointment: {}'.format(i.subject))
+    return
   scrub_item(f, i, kt, ts)
 
 
@@ -86,10 +101,10 @@ def scrub_task(f, i, kt):
       return
     t_complete = i.prop('task:33052').value
   except:
-    log(u'broken item, ignoring task: {}'.format(i.subject))
+    err(u'broken item, ignoring task: {}'.format(i.subject))
     return
   if not t_complete:
-    log('WARNING: status mismatch for task: ' + i.subject)
+    err('WARNING: status mismatch, ignoring task: ' + i.subject)
     return
   now = datetime.datetime.now()
   try:
@@ -125,13 +140,22 @@ def scrub_folder(f, r, kt):
   p = folder_path(f, r)
   log(u'processing "{}" ({}) note={}, task={}, appointment={}'.format(p, f.container_class, kt['note'], kt['task'], kt['appointment']))
   for i in f:
-    mc = i.message_class
-    if mc == 'IPM.Note' or scrub_folder.re.match(mc):
-      scrub_message(f, i, kt['note'])
-    elif i.message_class == 'IPM.Appointment':
-      scrub_appointment(f, i, kt['appointment'])
-    elif i.message_class == 'IPM.Task':
-      scrub_task(f, i, kt['task'])
+    try:
+      mc = i.message_class
+    except Exception as e:
+      err(u'{} {}'.format(type(e), e))
+      err(u'ERROR: illegal object (missing message_class property) ignored')
+      dumpitem(p, i)
+      return
+    try:
+      if mc == 'IPM.Note' or scrub_folder.re.match(mc):
+        scrub_message(f, i, kt['note'])
+      elif i.message_class == 'IPM.Appointment':
+        scrub_appointment(f, i, kt['appointment'])
+      elif i.message_class == 'IPM.Task':
+        scrub_task(f, i, kt['task'])
+    except:
+      dumpitem(p, i)
 
 scrub_folder.re = re.compile('IPM.Schedule')
 
@@ -139,7 +163,6 @@ scrub_folder.re = re.compile('IPM.Schedule')
 # get value from settings and limit to max (or use default)
 #
 def getktval(un, ws, tag, wstag):
-  global config
   try:
     kt = int(ws['settings']['zarafa']['v1']['plugins']['autodelete'][wstag])
     if kt > config['max_keep'][tag]:
@@ -155,14 +178,13 @@ def getktval(un, ws, tag, wstag):
 # get keeptime for store (from webapp settings property) in days
 #
 def keeptime(s, un):
-  global config
   from MAPI.Tags import PR_EC_WEBACCESS_SETTINGS_JSON
   cf = s.get_prop(PR_EC_WEBACCESS_SETTINGS_JSON)
   if cf:
     try:
       ws = json.loads(cf.value)
     except:
-      log(u'WARNING: broken settings for ' + un + ', using default')
+      err(u'WARNING: broken settings for ' + un + ', using default')
       return config['default_keep']
   else:
     log(u'NOTICE: no settings found for ' + un + ', using default')
@@ -177,7 +199,6 @@ def keeptime(s, un):
 # process one user store
 #
 def scrub_store(s):
-  global config
   un = s.user.name if s.user else '???'
   if un in config['omit']:
     log('skipping user ' + un)
@@ -191,7 +212,6 @@ def scrub_store(s):
 # process the public store
 #
 def scrub_public(s, mt):
-  global config
   if mt:
     det = ' for ' + s.company.name if s.company else '???'
   else:
@@ -200,7 +220,7 @@ def scrub_public(s, mt):
   for (n, skt) in config['public'].items():
     r = s.get_folder(n)
     if not r:
-      log('WARNING: public folder not found: ' + n)
+      err('WARNING: public folder not found: ' + n)
     else:
       kt = {'note': skt, 'task': skt, 'appointment': skt} 
       for f in r.folders():
@@ -212,6 +232,7 @@ def main():
   global opts
   global config
   global logfile
+  global errfile
   locale.setlocale(locale.LC_ALL, '')
 
   # command line arguments
@@ -237,7 +258,7 @@ def main():
     exit(1)
 
   # check config
-  cns = ['omit', 'public', 'default_keep', 'max_keep', 'logfile']
+  cns = ['omit', 'public', 'default_keep', 'max_keep', 'logfile', 'errorlog']
   for a in config:
     try:
       cns.remove(a)
@@ -250,6 +271,7 @@ def main():
   if not opts.dry_run:
     try:
       logfile = io.open(config['logfile'], mode='ab')
+      errfile = io.open(config['errorlog'], mode='ab')
     except IOError as e:
       print 'Cannot open logfile:', e.args[1]
       exit(1)
@@ -261,13 +283,13 @@ def main():
     try:
       s = ks.get_user(opts.user[0]).store
     except:
-      log('Failed to open store for user: ' + opts.user[0])
+      err('Fatal: Failed to open store for user: ' + opts.user[0])
       exit(1)
     scrub_store(s)
   else:
     for s in ks.stores():
       if s.orphan:
-        log('Warning, orphaned store found: ' + s.guid)
+        err('Warning, orphaned store found: ' + s.guid)
         continue
       if s.public:
         scrub_public(s, ks.multitenant)
