@@ -43,6 +43,10 @@ def folder_path(f, r):
     n = folder_path(f.parent, r) + '/' + n
   return n
 
+class IgnObjException(Exception):
+  def __init__(self, message):
+    super(IgnObjException, self).__init__(message)
+
 
 # delete item if timestamp older than keeptime
 #
@@ -62,6 +66,7 @@ def scrub_message(f, i, kt):
   ts = i.received if i.received else i.created
   if not ts:
     err('WARNING: missing timestamp, ignoring: ' + p + '/' + i.subject)
+    raise IgnObjException('message')
   else:
     scrub_item(f, i, kt, ts)
 
@@ -79,13 +84,13 @@ def scrub_appointment(f, i, kt):
       except Exception as e:
         err(u'{} {}'.format(type(e), e))
         err(u'broken recurrence, ignoring appointment: {}'.format(i.subject))
-        return
+        raise IgnObjException('appointment')
     else:
       ts = i.end
   except Exception as e:
     err(u'{} {}'.format(type(e), e))
     err(u'ignoring broken appointment: {}'.format(i.subject))
-    return
+    raise IgnObjException('appointment')
   scrub_item(f, i, kt, ts)
 
 
@@ -102,10 +107,10 @@ def scrub_task(f, i, kt):
     t_complete = i.prop('task:33052').value
   except:
     err(u'broken item, ignoring task: {}'.format(i.subject))
-    return
+    raise IgnObjException('task')
   if not t_complete:
     err('WARNING: status mismatch, ignoring task: ' + i.subject)
-    return
+    raise IgnObjException('task')
   now = datetime.datetime.now()
   try:
     t_recurring = i.prop('task:33062')
@@ -134,6 +139,7 @@ def ts_ex2u(t):
   return (t - 194074560) * 60
 
 
+
 # process one folder
 #
 def scrub_folder(f, r, kt):
@@ -154,7 +160,7 @@ def scrub_folder(f, r, kt):
         scrub_appointment(f, i, kt['appointment'])
       elif i.message_class == 'IPM.Task':
         scrub_task(f, i, kt['task'])
-    except:
+    except IgnObjException:
       dumpitem(p, i)
 
 scrub_folder.re = re.compile('IPM.Schedule')
