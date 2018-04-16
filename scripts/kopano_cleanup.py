@@ -120,15 +120,19 @@ def scrub_task(f, i, kt):
 
   # do not purge completed tasks for ongoing series
   if t_recurring and t_recurring.value and tmp:
-    rd = tmp.value
-    pt = struct.unpack_from('<L', rd, 6)
-    p_sed = 50 if pt else 46
-    if pt == 3 or pt == 11:
-      p_sed += 4
-    (re,) = struct.unpack_from('<L', rd, p_sed)
-    re = datetime.datetime.fromtimestamp(ts_ex2u(re))
-    if re > now:
-      return
+    try:
+      rd = tmp.value
+      pt = struct.unpack_from('<L', rd, 6)
+      p_sed = 50 if pt else 46
+      if pt == 3 or pt == 11:
+        p_sed += 4
+      (re,) = struct.unpack_from('<L', rd, p_sed)
+      re = datetime.datetime.fromtimestamp(ts_ex2u(re))
+      if re > now:
+        return
+    except:
+      err(u'broken recurrence data, ignoring task: {}'.format(i.subject))
+      raise IgnObjException('task')
 
   ts = i.last_modified
   scrub_item(f, i, kt, ts)
