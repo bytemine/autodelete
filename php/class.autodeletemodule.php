@@ -185,10 +185,8 @@ class AutodeleteModule extends Module {
    * @return boolean
    */
 	private function setPurgeEmpty($actionData) {
-	error_log("in module will call setPurgeEmpty");
 	  $purge_empty = true;
 	  if ($actionData['purge_empty']=="false") {
-	    error_log("false detected");
 	    $purge_empty = false;
 	  }
 	  AutodeleteData::setPurgeEmpty($purge_empty);

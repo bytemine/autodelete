@@ -15,6 +15,7 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 	constructor: function(a) 
 	{
 		a = a || {};
+		purge_empty = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/purge_empty") === undefined ? true : container.getSettingsModel().get("zarafa/v1/plugins/autodelete/purge_empty");
 		Ext.applyIf(a, {
 			title: dgettext("plugin_autodelete", "Konfiguration zum automatischen Löschen"),
 			layout: "form",
@@ -34,11 +35,11 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 			  xtype: "displayfield",
 				  hideLabel: true,
 				  value: "<br/><hr /><br/><h2>Leere Unterordner löschen:</h2></br>" +
-				         "<span id=\"autodelete_purge_empty\">" + (container.getSettingsModel().get("zarafa/v1/plugins/autodelete/purge_empty")==true ? "Aktiviert" : "Deaktiviert") + "</span>" + "<br />"
+				         '<input type="checkbox" id="purge_empty" checked="'+purge_empty+'"/>' + '<br />'
 			}, {
 				xtype: "button",
 				  text: dgettext("plugin_autodelete", "Ändern"),
-				  handler: this.openSetPurgeEmptyDialog,
+				  handler: this.setPurgeEmpty,
 				  scope: this,
 				  width: 250
 			}, {
@@ -83,24 +84,9 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 	},
 	setPurgeEmpty: function(a)
 	{
-  	container.getRequest().singleRequest("autodeletemodule", "setpurgeempty", {purge_empty: a}, new Zarafa.plugins.autodelete.data.ResponseHandler({
+  	container.getRequest().singleRequest("autodeletemodule", "setpurgeempty", {purge_empty: Ext.get('purge_empty').dom.checked.toString()}, new Zarafa.plugins.autodelete.data.ResponseHandler({
                         	successCallback: this.openResponseDialog.createDelegate(this)
 	                }))
-	},
-  openSetPurgeEmptyDialog: function(a)
-	{
-	alert(container.getSettingsModel().get("zarafa/v1/plugins/autodelete/purge_empty").toString());
-	  Ext.MessageBox.show({
-	    title:    'Frage', 
-	    msg:      'Leere Unterordner löschen? <input type="checkbox" id="purge_empty" checked="'+container.getSettingsModel().get("zarafa/v1/plugins/autodelete/purge_empty").toString()+'"/>',
-	    buttons:  Ext.MessageBox.OKCANCEL,
-	    fn: function(btn) {
-	      if (btn === "ok") {
-		      this.setPurgeEmpty(Ext.get('purge_empty').dom.checked);
-		    }	
-	    },
-	    scope: this
-    });
 	},
 	openSetPeriodTaskDialog: function(a)
 	{
@@ -128,7 +114,6 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 	},
 	openResponseDialog: function(a)
 	{
-	console.log(a);
 		if (a.isPeriodOK)
 		{
 		  if (a.type && a.type == "email") {
@@ -150,11 +135,7 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
           f.innerHTML = a.period;
         }
       } else if (a.type && a.type == "purge_empty") {
-        f = document.getElementById("autodelete_purge_empty");
-		    if (f) {
-          f.textContent = a.purge_empty==true ? "Aktiviert" : "Deaktiviert";
-          f.innerHTML = a.purge_empty==true ? "Aktiviert" : "Deaktiviert";
-        }
+        Ext.Msg.alert('Einstellung gespeichert', 'Die Einstellung wurde gespeichert.');
       }
 		} else {
 			Zarafa.common.dialogs.MessageBox.show({

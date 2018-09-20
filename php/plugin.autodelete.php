@@ -71,8 +71,7 @@ class PluginAutodelete extends Plugin {
 							'period_appointment' => PLUGIN_AUTODELETE_DEFAULT_PERIOD_APPOINTMENT,
 							'max_period_email' => PLUGIN_AUTODELETE_MAX_PERIOD_EMAIL,
 							'max_period_task' => PLUGIN_AUTODELETE_MAX_PERIOD_TASK,
-							'max_period_appointment' => PLUGIN_AUTODELETE_MAX_PERIOD_APPOINTMENT,
-							'purge_empty' => PLUGIN_AUTODELETE_PURGE_EMPTY
+							'max_period_appointment' => PLUGIN_AUTODELETE_MAX_PERIOD_APPOINTMENT
 						)
 					)
 				)
