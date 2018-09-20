@@ -146,9 +146,9 @@ def ts_ex2u(t):
 
 # process one folder
 #
-def scrub_folder(f, r, kt):
+def scrub_folder(f, r, us, Z=None):
   p = folder_path(f, r)
-  log(u'processing "{}" ({}) note={}, task={}, appointment={}'.format(p, f.container_class, kt['note'], kt['task'], kt['appointment']))
+  log(u'processing "{}" ({}) note={}, task={}, appointment={}, purge_empty={}'.format(p, f.container_class, us['note'], us['task'], us['appointment'], us['purge_empty']))
   for i in f:
     try:
       mc = i.message_class
@@ -159,13 +159,18 @@ def scrub_folder(f, r, kt):
       return
     try:
       if mc == 'IPM.Note' or scrub_folder.re.match(mc):
-        scrub_message(f, i, kt['note'])
+        scrub_message(f, i, us['note'])
       elif i.message_class == 'IPM.Appointment':
-        scrub_appointment(f, i, kt['appointment'])
+        scrub_appointment(f, i, us['appointment'])
       elif i.message_class == 'IPM.Task':
-        scrub_task(f, i, kt['task'])
+        scrub_task(f, i, us['task'])
     except IgnObjException:
       dumpitem(p, i)
+  f = f.parent.folder(entryid=f.entryid) # refresh
+  if us['purge_empty'] and not f.count and not f.subfolder_count and not f.parent == r:
+    log(u'DEL FOLDER "{}"'.format(p))
+    if not opts.dry_run:
+      f.parent.delete(f, soft=True)
 
 scrub_folder.re = re.compile('IPM.Schedule')
 
@@ -185,9 +190,9 @@ def getktval(un, ws, tag, wstag):
   return kt
 
 
-# get keeptime for store (from webapp settings property) in days
+# get settings for user/store (from webapp settings property)
 #
-def keeptime(s, un):
+def user_settings(s, un):
   from MAPI.Tags import PR_EC_WEBACCESS_SETTINGS_JSON
   cf = s.get_prop(PR_EC_WEBACCESS_SETTINGS_JSON)
   if cf:
@@ -199,11 +204,25 @@ def keeptime(s, un):
   else:
     log(u'NOTICE: no settings found for ' + un + ', using default')
     return config['default_keep']
-  kt = {}
-  kt['note'] = getktval(un, ws, 'note', 'period_email')
-  kt['task'] = getktval(un, ws, 'task', 'period_task')
-  kt['appointment'] = getktval(un, ws, 'appointment', 'period_appointment')
-  return kt
+  us = {}
+  us['note'] = getktval(un, ws, 'note', 'period_email')
+  us['task'] = getktval(un, ws, 'task', 'period_task')
+  us['appointment'] = getktval(un, ws, 'appointment', 'period_appointment')
+  pe = True
+  if not opts.force_purge:
+    try:
+      pe = bool(ws['settings']['zarafa']['v1']['plugins']['autodelete']['purge_empty'])
+    except Exception as e:
+      log(u'{} {}'.format(type(e), e))
+      log(u'NOTICE: no or invalid purge_emtpy setting for ' + un + ', using default')
+  us['purge_empty'] = pe
+  return us
+
+
+# postorder folder list
+#
+def fldlst(f):
+  return [x for ff in f.folders(recurse=False) for x in fldlst(ff)] + [f]
 
 
 # process one user store
@@ -213,10 +232,11 @@ def scrub_store(s):
   if un in config['omit']:
     log('skipping user ' + un)
     return
-  kt = keeptime(s, un)
-  log(u'processing user "{}" - note={}, task={}, appointment={}'.format(un, kt['note'], kt['task'], kt['appointment']))
-  for f in s:
-    scrub_folder(f, s.subtree, kt)
+  us = user_settings(s, un)
+  log(u'processing user "{}" - note={}, task={}, appointment={}, purge_empty={}'.format(un, us['note'], us['task'], us['appointment'], us['purge_empty']))
+  for f in fldlst(s.subtree):
+    if f != s.subtree:
+      scrub_folder(f, s.subtree, us)
 
 
 # process the public store
@@ -232,10 +252,10 @@ def scrub_public(s, mt):
     if not r:
       err('WARNING: public folder not found: ' + n)
     else:
-      kt = {'note': skt, 'task': skt, 'appointment': skt} 
+      us = {'note': skt, 'task': skt, 'appointment': skt, 'purge_empty': False}
       for f in r.folders():
-        scrub_folder(f, s.subtree, kt)
-      scrub_folder(r, s.subtree, kt)
+        scrub_folder(f, s.subtree, us)
+      scrub_folder(r, s.subtree, us)
 
 
 def main():
@@ -252,6 +272,7 @@ def main():
   gr = ap.add_mutually_exclusive_group()
   gr.add_argument('-u', '--user', nargs=1, help='cleanup selected user only')
   gr.add_argument('-p', '--public', action='store_true', help='cleanup public store(s) only')
+  gr.add_argument('-Z', '--force_purge', metavar='USER', nargs=1, help='cleanup selected user and force removal of empty subfolders')
   opts = ap.parse_args()
   sys.argv = [sys.argv[0]]
 
@@ -289,11 +310,12 @@ def main():
 
   # iterate stores
   ks = kopano.Server()
-  if opts.user:
+  u = opts.user[0] if opts.user else opts.force_purge[0] if opts.force_purge else None
+  if u:
     try:
-      s = ks.get_user(opts.user[0]).store
+      s = ks.get_user(u).store
     except:
-      err('Fatal: Failed to open store for user: ' + opts.user[0])
+      err('Fatal: Failed to open store for user: ' + u)
       exit(1)
     scrub_store(s)
   else:
