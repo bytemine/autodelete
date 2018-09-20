@@ -44,4 +44,8 @@ define('PLUGIN_AUTODELETE_DEFAULT_PERIOD_APPOINTMENT', 30);
  */
 define('PLUGIN_AUTODELETE_MAX_PERIOD_APPOINTMENT', 60);
 
+/**
+ * Default about deleting empty subfolders
+ */
+define('PLUGIN_AUTODELETE_PURGE_EMPTY', true);
 ?>

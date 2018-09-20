@@ -27,6 +27,10 @@ Zarafa.plugins.autodelete.data.ResponseHandler = Ext.extend(Zarafa.core.data.Abs
 	{
 		this.successCallback(a)
 	},
+	doSetpurgeempty: function(a) 
+	{
+		this.successCallback(a)
+	},
 	doError: function(a) 
 	{
 		a.error ? Zarafa.common.dialogs.MessageBox.show(

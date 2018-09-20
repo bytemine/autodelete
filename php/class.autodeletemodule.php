@@ -54,6 +54,9 @@ class AutodeleteModule extends Module {
 						case "setperiodappointment":
 							$result = $this->setPeriodAppointment($actionData);
 							break;
+					  case "setpurgeempty":
+							$result = $this->setPurgeEmpty($actionData);
+							break;
 						default:
 							$this->handleUnknownActionType($actionType);
 					}
@@ -171,6 +174,30 @@ class AutodeleteModule extends Module {
 		$response['period'] = $period;
 		$response['type'] = "appointment";
 		$this->addActionData("setperiod", $response);
+		$GLOBALS["bus"]->addData($this->getResponseData());
+		return true;
+	}
+
+  /**
+   * Enable or disable the deletion of empty subfolders
+   *
+   * @access private
+   * @return boolean
+   */
+	private function setPurgeEmpty($actionData) {
+	error_log("in module will call setPurgeEmpty");
+	  $purge_empty = true;
+	  if ($actionData['purge_empty']=="false") {
+	    error_log("false detected");
+	    $purge_empty = false;
+	  }
+	  AutodeleteData::setPurgeEmpty($purge_empty);
+
+    $response = array();
+		$response['purge_empty'] = $purge_empty;
+		$response['isPeriodOK'] = true;
+		$response['type'] = "purge_empty";
+		$this->addActionData("setpurgeempty", $response);
 		$GLOBALS["bus"]->addData($this->getResponseData());
 		return true;
 	}

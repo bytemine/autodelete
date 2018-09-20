@@ -60,6 +60,19 @@ class AutodeleteData {
 		$GLOBALS["settings"]->saveSettings();
 	}
 
+	/**
+	 * Set purge_empty setting
+	 *
+	 * @param boolean $purge_empty
+	 */
+	public static function setPurgeEmpty($purge_empty) {
+	error_log("set purge empty was called");
+	error_log(var_export($purge_empty, 1));
+		$GLOBALS["settings"]->set("zarafa/v1/plugins/autodelete/purge_empty", $purge_empty);
+		$GLOBALS["settings"]->saveSettings();
+		error_log("set purge empty is done");
+	}
+
 }
 
 ?>
