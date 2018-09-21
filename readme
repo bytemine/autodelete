@@ -2,11 +2,13 @@ Code Repository:
 https://github.com/bytemine/autodelete
 
 Tested on:
-- Kopano WebApp 3.4.5 - Kopano Core 8.4.5
+- Kopano WebApp 3.4.21 - Kopano Core 8.6.2
 
 Release notes:
 
 0.1.3
+- Replace edit dialogs by inline editing.
+- Option to disable removal of empty subdirectories.
 
 0.1.2
 - Do not show a success popup, as the user still needs to apply the change manually.
