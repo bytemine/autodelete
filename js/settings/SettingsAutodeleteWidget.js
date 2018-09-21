@@ -16,6 +16,9 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 	{
 		a = a || {};
 		purge_empty = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/purge_empty") === undefined ? true : container.getSettingsModel().get("zarafa/v1/plugins/autodelete/purge_empty");
+		period_email = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_email");
+		period_task = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_task");
+		period_appointment = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_appointment");
 		Ext.applyIf(a, {
 			title: dgettext("plugin_autodelete", "Konfiguration zum automatischen Löschen"),
 			layout: "form",
@@ -24,11 +27,35 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 				  hideLabel: true,
 				  value: "<h2>E-Mail:</h2></br>" +
 				         dgettext("plugin_autodelete", "Maximaler Zeitraum: " + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/max_period_email") + " Tage") + "<br />" +
-					       dgettext("plugin_autodelete", "Aktuell eingestellter Zeitraum: ") + "<span id=\"autodelete_period_email\">" + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_email") + "</span>" + " Tage"
+					       dgettext("plugin_autodelete", "Aktuell eingestellter Zeitraum: ") + "<input type=\"text\" id=\"period_email\" size=\"3\" value=\""+ period_email +"\"></input>" + " Tage"
 			}, {
 				xtype: "button",
 				  text: dgettext("plugin_autodelete", "Ändern"),
-				  handler: this.openSetPeriodEmailDialog,
+				  handler: this.setPeriodEmail,
+				  scope: this,
+				  width: 250
+			}, {
+				xtype: "displayfield",
+				  hideLabel: true,
+				  value: "<br/><hr /><br/><h2>Aufgaben:</h2></br>" +
+				         dgettext("plugin_autodelete", "Maximaler Zeitraum: " + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/max_period_task") + " Tage") + "<br />" +
+					       dgettext("plugin_autodelete", "Aktuell eingestellter Zeitraum: ") + "<input type=\"text\" id=\"period_task\" size=\"3\" value=\""+ period_task +"\"></input>" + " Tage"
+			}, {
+				xtype: "button",
+				  text: dgettext("plugin_autodelete", "Ändern"),
+				  handler: this.setPeriodTask,
+				  scope: this,
+				  width: 250
+  		}, {
+				xtype: "displayfield",
+				  hideLabel: true,
+				  value: "<br/><hr /><br/><h2>Termine:</h2></br>" +
+				         dgettext("plugin_autodelete", "Maximaler Zeitraum: " + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/max_period_appointment") + " Tage") + "<br />" +
+					       dgettext("plugin_autodelete", "Aktuell eingestellter Zeitraum: ") + "<input type=\"text\" id=\"period_appointment\" size=\"3\" value=\""+ period_appointment +"\"></input>" + " Tage"
+			}, {
+				xtype: "button",
+				  text: dgettext("plugin_autodelete", "Ändern"),
+				  handler: this.setPeriodAppointment,
 				  scope: this,
 				  width: 250
 			}, {
@@ -42,45 +69,15 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 				  handler: this.setPurgeEmpty,
 				  scope: this,
 				  width: 250
-			}, {
-				xtype: "displayfield",
-				  hideLabel: true,
-				  value: "<br/><hr /><br/><h2>Aufgaben:</h2></br>" +
-				         dgettext("plugin_autodelete", "Maximaler Zeitraum: " + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/max_period_task") + " Tage") + "<br />" +
-					       dgettext("plugin_autodelete", "Aktuell eingestellter Zeitraum: ") + "<span id=\"autodelete_period_task\">" + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_task") + "</span>" + " Tage"
-			}, {
-				xtype: "button",
-				  text: dgettext("plugin_autodelete", "Ändern"),
-				  handler: this.openSetPeriodTaskDialog,
-				  scope: this,
-				  width: 250
-  		}, {
-				xtype: "displayfield",
-				  hideLabel: true,
-				  value: "<br/><hr /><br/><h2>Termine:</h2></br>" +
-				         dgettext("plugin_autodelete", "Maximaler Zeitraum: " + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/max_period_appointment") + " Tage") + "<br />" +
-					       dgettext("plugin_autodelete", "Aktuell eingestellter Zeitraum: ") + "<span id=\"autodelete_period_appointment\">" + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_appointment") + "</span>" + " Tage"
-			}, {
-				xtype: "button",
-				  text: dgettext("plugin_autodelete", "Ändern"),
-				  handler: this.openSetPeriodAppointmentDialog,
-				  scope: this,
-				  width: 250
 			}]
 		});
 		Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget.superclass.constructor.call(this, a)
 	},
-	openSetPeriodEmailDialog: function(a)
+	setPeriodEmail: function(a)
 	{
-		Zarafa.common.dialogs.MessageBox.prompt(dgettext("plugin_autodelete", "neuen Zeitraum für E-Mails eingeben"), dgettext("plugin_autodelete", "Bitte einen Zeitraum in Tagen angeben"), this.setPeriodEmail, this)
-	},
-	setPeriodEmail: function(a, b)
-	{
-		if (a === "ok") {
-			container.getRequest().singleRequest("autodeletemodule", "setperiodemail", {period: b}, new Zarafa.plugins.autodelete.data.ResponseHandler({
-                        	successCallback: this.openResponseDialog.createDelegate(this)
-	                }))
-		}	
+		container.getRequest().singleRequest("autodeletemodule", "setperiodemail", {period: Ext.get('period_email').dom.value}, new Zarafa.plugins.autodelete.data.ResponseHandler({
+                      	successCallback: this.openResponseDialog.createDelegate(this)
+                }))
 	},
 	setPurgeEmpty: function(a)
 	{
@@ -88,55 +85,22 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
                         	successCallback: this.openResponseDialog.createDelegate(this)
 	                }))
 	},
-	openSetPeriodTaskDialog: function(a)
+	setPeriodTask: function(a)
 	{
-		Zarafa.common.dialogs.MessageBox.prompt(dgettext("plugin_autodelete", "neuen Zeitraum für Aufgaben eingeben"), dgettext("plugin_autodelete", "Bitte einen Zeitraum angeben"), this.setPeriodTask, this)
+		container.getRequest().singleRequest("autodeletemodule", "setperiodtask", {period: Ext.get('period_task').dom.value}, new Zarafa.plugins.autodelete.data.ResponseHandler({
+                      	successCallback: this.openResponseDialog.createDelegate(this)
+                }))
 	},
-	setPeriodTask: function(a, b)
+	setPeriodAppointment: function(a)
 	{
-		if (a === "ok") {
-			container.getRequest().singleRequest("autodeletemodule", "setperiodtask", {period: b}, new Zarafa.plugins.autodelete.data.ResponseHandler({
-                        	successCallback: this.openResponseDialog.createDelegate(this)
-	                }))
-		}	
-	},
-	openSetPeriodAppointmentDialog: function(a)
-	{
-		Zarafa.common.dialogs.MessageBox.prompt(dgettext("plugin_autodelete", "neuen Zeitraum für Termine eingeben"), dgettext("plugin_autodelete", "Bitte einen Zeitraum angeben"), this.setPeriodAppointment, this)
-	},
-	setPeriodAppointment: function(a, b)
-	{
-		if (a === "ok") {
-			container.getRequest().singleRequest("autodeletemodule", "setperiodappointment", {period: b}, new Zarafa.plugins.autodelete.data.ResponseHandler({
-                        	successCallback: this.openResponseDialog.createDelegate(this)
-	                }))
-		}	
+		container.getRequest().singleRequest("autodeletemodule", "setperiodappointment", {period: Ext.get('period_appointment').dom.value}, new Zarafa.plugins.autodelete.data.ResponseHandler({
+                      	successCallback: this.openResponseDialog.createDelegate(this)
+                }))
 	},
 	openResponseDialog: function(a)
 	{
-		if (a.isPeriodOK)
-		{
-		  if (a.type && a.type == "email") {
-		    f = document.getElementById("autodelete_period_email");
-		    if (f) {
-          f.textContent = a.period;
-          f.innerHTML = a.period;
-        }
-      } else if (a.type && a.type == "task") {
-        f = document.getElementById("autodelete_period_task");
-		    if (f) {
-          f.textContent = a.period;
-          f.innerHTML = a.period;
-        }
-      } else if (a.type && a.type == "appointment") {
-        f = document.getElementById("autodelete_period_appointment");
-		    if (f) {
-          f.textContent = a.period;
-          f.innerHTML = a.period;
-        }
-      } else if (a.type && a.type == "purge_empty") {
-        Ext.Msg.alert('Einstellung gespeichert', 'Die Einstellung wurde gespeichert.');
-      }
+		if (a.isPeriodOK) {
+		  Ext.Msg.alert('Einstellung gespeichert', 'Die Einstellung wurde gespeichert.');
 		} else {
 			Zarafa.common.dialogs.MessageBox.show({
 				title: dgettext("plugin_autodelete", "Fehler"),
