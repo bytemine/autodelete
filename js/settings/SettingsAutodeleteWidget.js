@@ -101,6 +101,7 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 	openResponseDialog: function(a)
 	{
 		if (a.isPeriodOK) {
+		  this.updateSettings(this.settingsModel);
 		  Ext.Msg.alert('Einstellung gespeichert', 'Die Einstellung wurde gespeichert.');
 		} else {
 			Zarafa.common.dialogs.MessageBox.show({
@@ -118,6 +119,38 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 		container.getRequest().singleRequest("autodeletemodule", "activate", {}, new Zarafa.plugins.autodelete.data.ResponseHandler({
 			successCallback: this.setStatus.createDelegate(this)
 		}))
+	},
+
+  /**
+	 * Called by the {@link Zarafa.settings.ui.SettingsCategoryWidgetPanel widget panel}
+	 * to load the latest version of the settings from the
+	 * {@link Zarafa.settings.SettingsModel} into the UI of this category.
+	 * @param {Zarafa.settings.SettingsModel} settingsModel The settings to load
+	 */
+	update : function(settingsModel)
+	{
+		this.updating = true;
+		this.settingsModel = settingsModel;
+
+		Ext.get('period_email').dom.value = settingsModel.get('zarafa/v1/plugins/autodelete/period_email');
+		Ext.get('period_task').dom.value = settingsModel.get('zarafa/v1/plugins/autodelete/period_task');
+		Ext.get('period_appointment').dom.value = settingsModel.get('zarafa/v1/plugins/autodelete/period_appointment');
+		Ext.get('purge_empty').dom.checked = settingsModel.get('zarafa/v1/plugins/autodelete/purge_empty');
+
+		this.updating = false;
+	},
+
+	/**
+	 * Called by the {@link Zarafa.settings.ui.SettingsCategoryWidgetPanel widget panel}
+	 * to update the settings from the UI into the {@link Zarafa.settings.SettingsModel settings model}.
+	 * @param {Zarafa.settings.SettingsModel} settingsModel The settings to update
+	 */
+	updateSettings : function(settingsModel)
+	{
+		settingsModel.set('zarafa/v1/plugins/autodelete/period_email', Ext.get('period_email').dom.value);
+		settingsModel.set('zarafa/v1/plugins/autodelete/period_taks', Ext.get('period_task').dom.value);
+		settingsModel.set('zarafa/v1/plugins/autodelete/period_appointment', Ext.get('period_appointment').dom.value);
+		settingsModel.set('zarafa/v1/plugins/autodelete/purge_empty', Ext.get('purge_empty').dom.checked);
 	}
 });
 Ext.reg("Zarafa.plugins.autodelete.settingsautodeletewidget", Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget);
