@@ -148,7 +148,7 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 	updateSettings : function(settingsModel)
 	{
 		settingsModel.set('zarafa/v1/plugins/autodelete/period_email', Ext.get('period_email').dom.value);
-		settingsModel.set('zarafa/v1/plugins/autodelete/period_taks', Ext.get('period_task').dom.value);
+		settingsModel.set('zarafa/v1/plugins/autodelete/period_task', Ext.get('period_task').dom.value);
 		settingsModel.set('zarafa/v1/plugins/autodelete/period_appointment', Ext.get('period_appointment').dom.value);
 		settingsModel.set('zarafa/v1/plugins/autodelete/purge_empty', Ext.get('purge_empty').dom.checked);
 	}
