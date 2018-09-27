@@ -16,7 +16,6 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 	{
 		a = a || {};
 		purge_empty = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/purge_empty") === undefined ? true : container.getSettingsModel().get("zarafa/v1/plugins/autodelete/purge_empty");
-
 		period_email = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_email");
 		period_task = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_task");
 		period_appointment = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_appointment");
@@ -135,7 +134,8 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 		Ext.get('period_email').dom.value = settingsModel.get('zarafa/v1/plugins/autodelete/period_email');
 		Ext.get('period_task').dom.value = settingsModel.get('zarafa/v1/plugins/autodelete/period_task');
 		Ext.get('period_appointment').dom.value = settingsModel.get('zarafa/v1/plugins/autodelete/period_appointment');
-		Ext.get('purge_empty').dom.checked = settingsModel.get('zarafa/v1/plugins/autodelete/purge_empty');
+		purge_empty = settingsModel.get("zarafa/v1/plugins/autodelete/purge_empty") === undefined ? true : settingsModel.get("zarafa/v1/plugins/autodelete/purge_empty");
+		Ext.get('purge_empty').dom.checked = purge_empty;
 
 		this.updating = false;
 	},
