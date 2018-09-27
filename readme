@@ -6,6 +6,10 @@ Tested on:
 
 Release notes:
 
+0.1.5
+- Reflect missing setting on first plugin call and set default.
+- Fix a typo in client side update function.
+
 0.1.4
 - Store settings also on client-side to force a reload.
 - add versioning to client-side files to avoid DeskApp caching.

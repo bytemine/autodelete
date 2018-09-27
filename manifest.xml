@@ -2,7 +2,7 @@
 <!DOCTYPE plugin SYSTEM "manifest.dtd">
 <plugin version="2">
 	<info>
-		<version>0.1.4</version>
+		<version>0.1.5</version>
 		<name>autodelete</name>
 		<title>Automatic delete</title>
 		<author>bytemine GmbH</author>
@@ -25,18 +25,18 @@
 			</info>
 			<files>
 				<client>
-					<clientfile load="release">js/data/Configuration-0.1.4.js</clientfile>
-					<clientfile load="release">js/data/ResponseHandler-0.1.4.js</clientfile>
-					<clientfile load="release">js/AutodeletePlugin-0.1.4.js</clientfile>
-					<clientfile load="release">js/settings/SettingsAutodeleteCategory-0.1.4.js</clientfile>
-					<clientfile load="release">js/settings/SettingsAutodeleteWidget-0.1.4.js</clientfile>
+					<clientfile load="release">js/data/Configuration-0.1.5.js</clientfile>
+					<clientfile load="release">js/data/ResponseHandler-0.1.5.js</clientfile>
+					<clientfile load="release">js/AutodeletePlugin-0.1.5.js</clientfile>
+					<clientfile load="release">js/settings/SettingsAutodeleteCategory-0.1.5.js</clientfile>
+					<clientfile load="release">js/settings/SettingsAutodeleteWidget-0.1.5.js</clientfile>
 				</client>
 				<server>
 					<serverfile>php/plugin.autodelete.php</serverfile>
 					<serverfile type="module" module="autodeletemodule">php/class.autodeletemodule.php</serverfile>
 				</server>
 				<resources>
-          <resourcefile load="release">resources/css/autodelete-0.1.4.css</resourcefile>
+          <resourcefile load="release">resources/css/autodelete-0.1.5.css</resourcefile>
 				</resources>
       </files>
 		</component>
