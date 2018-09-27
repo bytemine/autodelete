@@ -16,6 +16,7 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 	{
 		a = a || {};
 		purge_empty = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/purge_empty") === undefined ? true : container.getSettingsModel().get("zarafa/v1/plugins/autodelete/purge_empty");
+
 		period_email = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_email");
 		period_task = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_task");
 		period_appointment = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_appointment");
@@ -62,7 +63,7 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 			  xtype: "displayfield",
 				  hideLabel: true,
 				  value: "<br/><hr /><br/><h2>Leere Unterordner löschen:</h2></br>" +
-				         '<input type="checkbox" id="purge_empty" checked="'+purge_empty+'"/>' + '<br />'
+				         '<input type="checkbox" id="purge_empty" ' + (purge_empty==true ? 'checked' : '') + '/>' + '<br />'
 			}, {
 				xtype: "button",
 				  text: dgettext("plugin_autodelete", "Ändern"),
