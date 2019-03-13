@@ -6,6 +6,9 @@ Tested on:
 
 Release notes:
 
+0.1.6
+- Add the option to configure a period for clean up junk and trash folders.
+
 0.1.5
 - Reflect missing setting on first plugin call and set default.
 - Fix a typo in client side update function.

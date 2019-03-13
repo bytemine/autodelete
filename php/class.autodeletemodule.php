@@ -48,6 +48,9 @@ class AutodeleteModule extends Module {
 						case "setperiodemail":
 							$result = $this->setPeriodEmail($actionData);
 							break;
+					  case "setperiodjunktrash":
+							$result = $this->setPeriodJunkTrash($actionData);
+							break;
 					  case "setperiodtask":
 							$result = $this->setPeriodTask($actionData);
 							break;
@@ -129,6 +132,28 @@ class AutodeleteModule extends Module {
 		$response['isPeriodOK'] = $isPeriodOK;
 		$response['period'] = $period;
 		$response['type'] = "email";
+		$this->addActionData("setperiod", $response);
+		$GLOBALS["bus"]->addData($this->getResponseData());
+		return true;
+	}
+
+  /**
+   * Set junk and trash period
+   *
+   * @access private
+   * @return boolean
+   */
+	private function setPeriodJunkTrash($actionData) {
+    $isPeriodOK = false;
+		$period = $actionData['period'];
+		if($this->is_allowed($period, PLUGIN_AUTODELETE_MAX_PERIOD_JUNKTRASH)) {
+		  AutodeleteData::setPeriodJunkTrash($period);
+		  $isPeriodOK = true;
+		}
+
+		$response['isPeriodOK'] = $isPeriodOK;
+		$response['period'] = $period;
+		$response['type'] = "junktrash";
 		$this->addActionData("setperiod", $response);
 		$GLOBALS["bus"]->addData($this->getResponseData());
 		return true;

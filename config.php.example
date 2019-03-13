@@ -25,6 +25,16 @@ define('PLUGIN_AUTODELETE_DEFAULT_PERIOD_EMAIL', 30);
 define('PLUGIN_AUTODELETE_MAX_PERIOD_EMAIL', 60);
 
 /**
+ * Default period after which junk and trash are deleted
+ */
+define('PLUGIN_AUTODELETE_DEFAULT_PERIOD_JUNKTRASH', 365);
+
+/**
+ * Maximum period after which junk and trash are deleted
+ */
+define('PLUGIN_AUTODELETE_MAX_PERIOD_JUNKTRASH', 730);
+
+/**
  * Default period after which tasks are deleted
  */
 define('PLUGIN_AUTODELETE_DEFAULT_PERIOD_TASK', 30);

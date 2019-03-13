@@ -45,6 +45,16 @@ class AutodeleteData {
 	 *
 	 * @param boolean $period
 	 */
+	public static function setPeriodJunkTrash($period) {
+		$GLOBALS["settings"]->set("zarafa/v1/plugins/autodelete/period_junktrash", $period);
+		$GLOBALS["settings"]->saveSettings();
+	}
+
+	/**
+	 * Set period
+	 *
+	 * @param boolean $period
+	 */
 	public static function setPeriodTask($period) {
 		$GLOBALS["settings"]->set("zarafa/v1/plugins/autodelete/period_task", $period);
 		$GLOBALS["settings"]->saveSettings();

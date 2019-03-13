@@ -17,6 +17,7 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 		a = a || {};
 		purge_empty = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/purge_empty") === undefined ? true : container.getSettingsModel().get("zarafa/v1/plugins/autodelete/purge_empty");
 		period_email = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_email");
+		period_junktrash = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_junktrash");
 		period_task = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_task");
 		period_appointment = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_appointment");
 		Ext.applyIf(a, {
@@ -32,6 +33,18 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 				xtype: "button",
 				  text: dgettext("plugin_autodelete", "Ändern"),
 				  handler: this.setPeriodEmail,
+				  scope: this,
+				  width: 250
+			}, {
+			  xtype: "displayfield",
+				  hideLabel: true,
+				  value: "<h2><br/><hr /><br/>Papierkorb und Spam:</h2></br>" +
+				         dgettext("plugin_autodelete", "Maximaler Zeitraum: " + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/max_period_junktrash") + " Tage") + "<br />" +
+					       dgettext("plugin_autodelete", "Aktuell eingestellter Zeitraum: ") + "<input type=\"text\" id=\"period_junktrash\" size=\"3\" value=\""+ period_junktrash +"\"></input>" + " Tage"
+			}, {
+				xtype: "button",
+				  text: dgettext("plugin_autodelete", "Ändern"),
+				  handler: this.setPeriodJunkTrash,
 				  scope: this,
 				  width: 250
 			}, {
@@ -76,6 +89,12 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 	setPeriodEmail: function(a)
 	{
 		container.getRequest().singleRequest("autodeletemodule", "setperiodemail", {period: Ext.get('period_email').dom.value}, new Zarafa.plugins.autodelete.data.ResponseHandler({
+                      	successCallback: this.openResponseDialog.createDelegate(this)
+                }))
+	},
+	setPeriodJunkTrash: function(a)
+	{
+		container.getRequest().singleRequest("autodeletemodule", "setperiodjunktrash", {period: Ext.get('period_junktrash').dom.value}, new Zarafa.plugins.autodelete.data.ResponseHandler({
                       	successCallback: this.openResponseDialog.createDelegate(this)
                 }))
 	},
@@ -132,6 +151,7 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 		this.settingsModel = settingsModel;
 
 		Ext.get('period_email').dom.value = settingsModel.get('zarafa/v1/plugins/autodelete/period_email');
+		Ext.get('period_junktrash').dom.value = settingsModel.get('zarafa/v1/plugins/autodelete/period_junktrash');
 		Ext.get('period_task').dom.value = settingsModel.get('zarafa/v1/plugins/autodelete/period_task');
 		Ext.get('period_appointment').dom.value = settingsModel.get('zarafa/v1/plugins/autodelete/period_appointment');
 		purge_empty = settingsModel.get("zarafa/v1/plugins/autodelete/purge_empty") === undefined ? true : settingsModel.get("zarafa/v1/plugins/autodelete/purge_empty");
@@ -148,6 +168,7 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 	updateSettings : function(settingsModel)
 	{
 		settingsModel.set('zarafa/v1/plugins/autodelete/period_email', Ext.get('period_email').dom.value);
+		settingsModel.set('zarafa/v1/plugins/autodelete/period_junktrash', Ext.get('period_junktrash').dom.value);
 		settingsModel.set('zarafa/v1/plugins/autodelete/period_task', Ext.get('period_task').dom.value);
 		settingsModel.set('zarafa/v1/plugins/autodelete/period_appointment', Ext.get('period_appointment').dom.value);
 		settingsModel.set('zarafa/v1/plugins/autodelete/purge_empty', Ext.get('purge_empty').dom.checked);
