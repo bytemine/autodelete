@@ -12,6 +12,7 @@ import argparse
 import datetime
 import struct
 
+from MAPI.Tags import PR_EC_WEBACCESS_SETTINGS_JSON, PR_LAST_MODIFICATION_TIME
 
 
 opts = None
@@ -43,6 +44,9 @@ def folder_path(f, r):
     n = folder_path(f.parent, r) + '/' + n
   return n
 
+def logbar(c=''):
+  log(c + '+-----------------------------------------------------------------------------')
+
 class IgnObjException(Exception):
   def __init__(self, message):
     super(IgnObjException, self).__init__(message)
@@ -56,7 +60,7 @@ def scrub_item(f, i, kt, ts):
     # when we get here, message_class property exists
     log(u'DEL ({} >{}d) ts = {}, subject = "{}"'.format(i.message_class, kt, ts, i.subject))
     if not opts.dry_run:
-      pass # f.delete(i, soft=True)
+      f.delete(i, soft=True)
 
 
 # purge condition:
@@ -148,24 +152,24 @@ def ts_ex2u(t):
 #
 def scrub_folder(f, r, us, Z=None):
   p = folder_path(f, r)
-  log(u'processing "{}" ({}) note={}, task={}, appointment={}, purge_empty={}'.format(p, f.container_class, us['note'], us['task'], us['appointment'], us['purge_empty']))
+  log(u'processing "{}" ({})'.format(p, f.container_class))
   for i in f:
     try:
       mc = i.message_class
+      try:
+        if mc == 'IPM.Note' or scrub_folder.re.match(mc):
+          scrub_message(f, i, us['note'])
+        elif i.message_class == 'IPM.Appointment':
+          scrub_appointment(f, i, us['appointment'])
+        elif i.message_class == 'IPM.Task':
+          scrub_task(f, i, us['task'])
+      except IgnObjException:
+        dumpitem(p, i)
     except Exception as e:
       err(u'{} {}'.format(type(e), e))
       err(u'ERROR: illegal object (missing message_class property) ignored')
       dumpitem(p, i)
       return
-    try:
-      if mc == 'IPM.Note' or scrub_folder.re.match(mc):
-        scrub_message(f, i, us['note'])
-      elif i.message_class == 'IPM.Appointment':
-        scrub_appointment(f, i, us['appointment'])
-      elif i.message_class == 'IPM.Task':
-        scrub_task(f, i, us['task'])
-    except IgnObjException:
-      dumpitem(p, i)
   f = f.parent.folder(entryid=f.entryid) # refresh
   if us['purge_empty'] and not f.count and not f.subfolder_count and not f.parent == r:
     log(u'DEL FOLDER "{}"'.format(p))
@@ -175,47 +179,66 @@ def scrub_folder(f, r, us, Z=None):
 scrub_folder.re = re.compile('IPM.Schedule')
 
 
+# process 'Junk E-Mail' and 'Deleted Items'
+#
+def scrub_junk(s, kt):
+  try:
+    for f in [s.junk, s.wastebasket]:
+      log(u'processing "{}"'.format(f.name))
+      for i in f:
+        p = i.prop(PR_LAST_MODIFICATION_TIME) 
+        if not p or not p.value:
+          err(u'WARNING: missing last modification time property, object ignored')
+        else:
+          scrub_item(f, i, kt, p.value)
+  except Exception as e:
+    err(u'{} {}'.format(type(e), e))
+    err(u'ERROR: processing failed')
+
 # get value from settings and limit to max (or use default)
 #
 def getktval(un, ws, tag, wstag):
   try:
     kt = int(ws['settings']['zarafa']['v1']['plugins']['autodelete'][wstag])
     if kt > config['max_keep'][tag]:
-      log(u'NOTICE: keeptime (' + tag + ') too high for ' + un + ', clamped to max')
-      kt = config['max_keep'][tag]
+      log(u'| NOTICE: keeptime (' + tag + ') too high for ' + un + ', clamped to max')
+      return config['max_keep'][tag]
+  except KeyError:
+    log(u'| NOTICE: no keeptime (' + tag + ') setting for ' + un + ', using default')
   except Exception as e:
-    log(u'{} {}'.format(type(e), e))
-    log(u'NOTICE: no or invalid keeptime (' + tag + ') setting for ' + un + ', using default')
-    kt = config['default_keep'][tag]
-  return kt
+    log(u'| NOTICE: invalid keeptime (' + tag + ') setting for ' + un + ', using default')
+  return config['default_keep'][tag]
 
 
 # get settings for user/store (from webapp settings property)
 #
 def user_settings(s, un):
-  from MAPI.Tags import PR_EC_WEBACCESS_SETTINGS_JSON
   cf = s.get_prop(PR_EC_WEBACCESS_SETTINGS_JSON)
+  us = config['default_keep'].copy()
+  us['purge_empty'] = config['purge_empty']
   if cf:
     try:
       ws = json.loads(cf.value)
     except:
-      err(u'WARNING: broken settings for ' + un + ', using default')
-      return config['default_keep']
+      err(u'| WARNING: broken settings for ' + un + ', using default')
+      return us
   else:
-    log(u'NOTICE: no settings found for ' + un + ', using default')
-    return config['default_keep']
-  us = {}
-  us['note'] = getktval(un, ws, 'note', 'period_email')
-  us['task'] = getktval(un, ws, 'task', 'period_task')
-  us['appointment'] = getktval(un, ws, 'appointment', 'period_appointment')
-  pe = True
-  if not opts.force_purge:
-    try:
-      pe = bool(ws['settings']['zarafa']['v1']['plugins']['autodelete']['purge_empty'])
-    except Exception as e:
-      log(u'{} {}'.format(type(e), e))
-      log(u'NOTICE: no or invalid purge_emtpy setting for ' + un + ', using default')
-  us['purge_empty'] = pe
+    log(u'| NOTICE: no settings found for ' + un + ', using default')
+    return us
+  if opts.junk:
+    us['junktrash'] = getktval(un, ws, 'junktrash', 'period_junktrash')
+  else:
+    us['note'] = getktval(un, ws, 'note', 'period_email')
+    us['task'] = getktval(un, ws, 'task', 'period_task')
+    us['appointment'] = getktval(un, ws, 'appointment', 'period_appointment')
+    if not opts.force_purge:
+      try:
+        pe = bool(ws['settings']['zarafa']['v1']['plugins']['autodelete']['purge_empty'])
+        us['purge_empty'] = pe
+      except KeyError as e:
+        log(u'| NOTICE: no purge_emtpy setting for ' + un + ', using default')
+      except Exception as e:
+        log(u'| NOTICE: invalid purge_emtpy setting for ' + un + ', using default')
   return us
 
 
@@ -230,13 +253,21 @@ def fldlst(f):
 def scrub_store(s):
   un = s.user.name if s.user else '???'
   if un in config['omit']:
-    log('skipping user ' + un)
+    log('\nskipping user ' + un)
     return
+  else:
+    logbar('\n');
   us = user_settings(s, un)
-  log(u'processing user "{}" - note={}, task={}, appointment={}, purge_empty={}'.format(un, us['note'], us['task'], us['appointment'], us['purge_empty']))
-  for f in fldlst(s.subtree):
-    if f != s.subtree:
-      scrub_folder(f, s.subtree, us)
+  if opts.junk:
+    log(u'| "{}" - Junk E-Mail & Deleted Items = {}'.format(un, us['junktrash']))
+    scrub_junk(s, us['junktrash'])
+    logbar() 
+  else:
+    log(u'| "{}" - note={}, task={}, appointment={}, purge_empty={}'.format(un, us['note'], us['task'], us['appointment'], us['purge_empty']))
+    logbar()
+    for f in fldlst(s.subtree):
+      if f != s.subtree:
+        scrub_folder(f, s.subtree, us)
 
 
 # process the public store
@@ -246,7 +277,9 @@ def scrub_public(s, mt):
     det = ' for ' + s.company.name if s.company else '???'
   else:
     det = ''
-  log('processing public store' + det)
+  logbar('\n')
+  log('| public store' + det)
+  logbar()
   for (n, skt) in config['public'].items():
     r = s.get_folder(n)
     if not r:
@@ -273,6 +306,7 @@ def main():
   gr.add_argument('-u', '--user', nargs=1, help='cleanup selected user only')
   gr.add_argument('-p', '--public', action='store_true', help='cleanup public store(s) only')
   gr.add_argument('-Z', '--force_purge', metavar='USER', nargs=1, help='cleanup selected user and force removal of empty subfolders')
+  gr.add_argument('-j', '--junk', action='store_true', help="cleanup 'Deleted Items' and 'Junk E-Mail' folders")
   opts = ap.parse_args()
   sys.argv = [sys.argv[0]]
 
@@ -289,14 +323,20 @@ def main():
     exit(1)
 
   # check config
-  cns = ['omit', 'public', 'default_keep', 'max_keep', 'logfile', 'errorlog']
+  cns = ['omit', 'public', 'purge_empty', 'default_keep', 'max_keep', 'logfile', 'errorlog']
   for a in config:
     try:
       cns.remove(a)
     except ValueError as e:
       print 'unknown config setting:', a
   if len(cns):
-      print 'Missing config setting:', cns
+    print 'Missing config setting:', cns.pop()
+    exit(1)
+  for kt in ['note', 'task', 'appointment', 'junktrash']:
+    for cs in ['default_keep', 'max_keep']:
+      if not config[cs].get(kt):
+        print 'missing config setting: {}/{}'.format(cs, kt)
+        exit(1)
 
   # open logfile
   if not opts.dry_run:
@@ -323,7 +363,7 @@ def main():
       if s.orphan:
         err('Warning, orphaned store found: ' + s.guid)
         continue
-      if s.public:
+      if s.public and not opts.junk:
         scrub_public(s, ks.multitenant)
       elif opts.public:
         continue
