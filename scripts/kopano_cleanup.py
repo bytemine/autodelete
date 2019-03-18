@@ -147,7 +147,6 @@ def ts_ex2u(t):
   return (t - 194074560) * 60
 
 
-
 # process one folder
 #
 def scrub_folder(f, r, us, Z=None):
@@ -306,9 +305,12 @@ def main():
   gr.add_argument('-u', '--user', nargs=1, help='cleanup selected user only')
   gr.add_argument('-p', '--public', action='store_true', help='cleanup public store(s) only')
   gr.add_argument('-Z', '--force_purge', metavar='USER', nargs=1, help='cleanup selected user and force removal of empty subfolders')
-  gr.add_argument('-j', '--junk', action='store_true', help="cleanup 'Deleted Items' and 'Junk E-Mail' folders")
+  ap.add_argument('-j', '--junk', action='store_true', help="cleanup 'Deleted Items' and 'Junk E-Mail' folders")
   opts = ap.parse_args()
   sys.argv = [sys.argv[0]]
+  if opts.public and opts.junk or opts.force_purge and opts.junk:
+    print 'Cannot use --junk with --public or --force_purge.'
+    exit(1)
 
   # read config
   try:
