@@ -202,6 +202,8 @@ def getktval(un, ws, tag, wstag):
     if kt > config['max_keep'][tag]:
       log(u'| NOTICE: keeptime (' + tag + ') too high for ' + un + ', clamped to max')
       return config['max_keep'][tag]
+    else:
+      return kt
   except KeyError:
     log(u'| NOTICE: no keeptime (' + tag + ') setting for ' + un + ', using default')
   except Exception as e:
