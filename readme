@@ -6,6 +6,9 @@ Tested on:
 
 Release notes:
 
+0.1.7
+- Implement i18n in german and english.
+
 0.1.6
 - Add the option to configure a period for clean up junk and trash folders.
 
