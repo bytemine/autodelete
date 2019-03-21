@@ -1,0 +1,98 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-03-20 22:56+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: js/AutodeletePlugin-0.1.6.js:51
+msgid "displayname"
+msgstr "Plugin zum automatischen Löschen"
+
+#: js/settings/SettingsAutodeleteCategory-0.1.6.js:19
+msgid "category_title"
+msgstr "Automatisches Löschen"
+
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:24
+msgid "config_title"
+msgstr "Konfiguration zum automatischen Löschen"
+
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:29
+msgid "email"
+msgstr "E-Mail"
+
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:30
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:42
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:54
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:66
+msgid "max_time"
+msgstr "Maximaler Zeitraum"
+
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:30
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:31
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:42
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:54
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:55
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:66
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:67
+msgid "days"
+msgstr "Tage"
+
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:31
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:43
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:55
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:67
+msgid "current_time"
+msgstr "Aktuell eingestellter Zeitraum"
+
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:34
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:46
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:58
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:70
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:81
+msgid "change"
+msgstr "Ändern"
+
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:41
+msgid "junktrash"
+msgstr "Papierkorb und Spam"
+
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:53
+msgid "task"
+msgstr "Aufgaben"
+
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:65
+msgid "appointment"
+msgstr "Termine"
+
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:77
+msgid "delete_empty_subfolders"
+msgstr "Leere Unterordner löschen"
+
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:123
+msgid "save_box_title"
+msgstr "Einstellung gespeichert"
+
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:123
+msgid "save_message"
+msgstr "Die Einstellung wurde gespeichert."
+
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:126
+msgid "error_box_title"
+msgstr "Fehler"
+
+#: js/settings/SettingsAutodeleteWidget-0.1.6.js:127
+msgid "save_error_message"
+msgstr "Die Änderung konnte nicht gespeichert werden."
