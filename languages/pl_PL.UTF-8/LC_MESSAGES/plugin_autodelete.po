@@ -17,82 +17,82 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: js/AutodeletePlugin-0.1.6.js:51
+#: js/AutodeletePlugin-0.1.8.js:51
 msgid "displayname"
 msgstr "wtyczka dla automatyczny deletion"
 
-#: js/settings/SettingsAutodeleteCategory-0.1.6.js:19
+#: js/settings/SettingsAutodeleteCategory-0.1.8.js:19
 msgid "category_title"
 msgstr "Automatyczny deletion"
 
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:24
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:24
 msgid "config_title"
 msgstr "Konfiguracja dla automatyczny deletion"
 
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:29
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:29
 msgid "email"
 msgstr "Email"
 
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:30
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:42
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:54
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:66
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:30
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:42
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:54
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:66
 msgid "max_time"
 msgstr "maksymalny czas zasięg"
 
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:30
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:31
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:42
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:54
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:55
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:66
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:67
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:30
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:31
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:42
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:54
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:55
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:66
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:67
 msgid "days"
 msgstr "dni"
 
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:31
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:43
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:55
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:67
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:31
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:43
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:55
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:67
 msgid "current_time"
 msgstr "Obecny czas zasięg"
 
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:34
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:46
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:58
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:70
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:81
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:34
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:46
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:58
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:70
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:81
 msgid "change"
 msgstr "zmiana"
 
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:41
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:41
 msgid "junktrash"
 msgstr "dżonka i śmieci"
 
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:53
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:53
 msgid "task"
 msgstr "Zadania"
 
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:65
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:65
 msgid "appointment"
 msgstr "Spotkania"
 
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:77
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:77
 msgid "delete_empty_subfolders"
 msgstr "Kasować pusty podfoldery"
 
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:123
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:123
 msgid "save_box_title"
 msgstr "Oprawa zapisane"
 
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:123
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:123
 msgid "save_message"
 msgstr "Ustawienie zostało zapisane."
 
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:126
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:126
 msgid "error_box_title"
 msgstr "Błąd"
 
-#: js/settings/SettingsAutodeleteWidget-0.1.6.js:127
+#: js/settings/SettingsAutodeleteWidget-0.1.8.js:127
 msgid "save_error_message"
 msgstr "Zmiany mógłby nie być zapisane."
