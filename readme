@@ -6,6 +6,9 @@ Tested on:
 
 Release notes:
 
+0.1.8
+- Implement polish translation.
+
 0.1.7
 - Implement i18n in german and english.
 
