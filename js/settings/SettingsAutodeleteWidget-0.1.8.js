@@ -21,14 +21,14 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 		period_task = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_task");
 		period_appointment = container.getSettingsModel().get("zarafa/v1/plugins/autodelete/period_appointment");
 		Ext.applyIf(a, {
-			title: dgettext("plugin_autodelete", "config_title"),
+			title: dgettext("plugin_autodelete", "Configuration for automatic deletion"),
 			layout: "form",
 			items: [{
 				xtype: "displayfield",
 				  hideLabel: true,
 				  value: "<h2>" + dgettext("plugin_autodelete", "email") + "</h2></br>" +
-				         dgettext("plugin_autodelete", "max_time") + ": " + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/max_period_email") + " " + dgettext("plugin_autodelete", "days") + "<br />" +
-					       dgettext("plugin_autodelete", "current_time") + ": " + "<input type=\"text\" id=\"period_email\" size=\"3\" value=\""+ period_email +"\"></input>" + " " + dgettext("plugin_autodelete", "days")
+				         dgettext("plugin_autodelete", "Maximum time range") + ": " + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/max_period_email") + " " + dgettext("plugin_autodelete", "days") + "<br />" +
+					       dgettext("plugin_autodelete", "Current time") + ": " + "<input type=\"text\" id=\"period_email\" size=\"3\" value=\""+ period_email +"\"></input>" + " " + dgettext("plugin_autodelete", "days")
 			}, {
 				xtype: "button",
 				  text: dgettext("plugin_autodelete", "change"),
@@ -38,9 +38,9 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 			}, {
 			  xtype: "displayfield",
 				  hideLabel: true,
-				  value: "<br/><hr /><br/><h2>" + dgettext("plugin_autodelete", "junktrash") + "</h2></br>" +
-				         dgettext("plugin_autodelete", "max_time") + ": " + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/max_period_junktrash") + " " + dgettext("plugin_autodelete", "days") + "<br />" +
-					       dgettext("plugin_autodelete", "current_time") +": " + "<input type=\"text\" id=\"period_junktrash\" size=\"3\" value=\""+ period_junktrash +"\"></input>" + " " + dgettext("plugin_autodelete", "days")
+				  value: "<br/><hr /><br/><h2>" + dgettext("plugin_autodelete", "Junk and Trash") + "</h2></br>" +
+				         dgettext("plugin_autodelete", "Maximum time range") + ": " + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/max_period_junktrash") + " " + dgettext("plugin_autodelete", "days") + "<br />" +
+					       dgettext("plugin_autodelete", "Current time") +": " + "<input type=\"text\" id=\"period_junktrash\" size=\"3\" value=\""+ period_junktrash +"\"></input>" + " " + dgettext("plugin_autodelete", "days")
 			}, {
 				xtype: "button",
 				  text: dgettext("plugin_autodelete", "change"),
@@ -51,8 +51,8 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 				xtype: "displayfield",
 				  hideLabel: true,
 				  value: "<br/><hr /><br/><h2>" + dgettext("plugin_autodelete", "task") + "</h2></br>" +
-				         dgettext("plugin_autodelete", "max_time") + ": " + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/max_period_task") + " " + dgettext("plugin_autodelete", "days") + "<br />" +
-					       dgettext("plugin_autodelete", "current_time") + ": " + "<input type=\"text\" id=\"period_task\" size=\"3\" value=\""+ period_task +"\"></input>" + " " + dgettext("plugin_autodelete", "days")
+				         dgettext("plugin_autodelete", "Maximum time range") + ": " + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/max_period_task") + " " + dgettext("plugin_autodelete", "days") + "<br />" +
+					       dgettext("plugin_autodelete", "Current time") + ": " + "<input type=\"text\" id=\"period_task\" size=\"3\" value=\""+ period_task +"\"></input>" + " " + dgettext("plugin_autodelete", "days")
 			}, {
 				xtype: "button",
 				  text: dgettext("plugin_autodelete", "change"),
@@ -63,8 +63,8 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 				xtype: "displayfield",
 				  hideLabel: true,
 				  value: "<br/><hr /><br/><h2>" + dgettext("plugin_autodelete", "appointment") + "</h2></br>" +
-				         dgettext("plugin_autodelete", "max_time") + ": " + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/max_period_appointment") + " " + dgettext("plugin_autodelete", "days") + "<br />" +
-					       dgettext("plugin_autodelete", "current_time") + ": " + "<input type=\"text\" id=\"period_appointment\" size=\"3\" value=\""+ period_appointment +"\"></input>" + " " + dgettext("plugin_autodelete", "days")
+				         dgettext("plugin_autodelete", "Maximum time range") + ": " + container.getSettingsModel().get("zarafa/v1/plugins/autodelete/max_period_appointment") + " " + dgettext("plugin_autodelete", "days") + "<br />" +
+					       dgettext("plugin_autodelete", "Current time") + ": " + "<input type=\"text\" id=\"period_appointment\" size=\"3\" value=\""+ period_appointment +"\"></input>" + " " + dgettext("plugin_autodelete", "days")
 			}, {
 				xtype: "button",
 				  text: dgettext("plugin_autodelete", "change"),
@@ -74,7 +74,7 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 			}, {
 			  xtype: "displayfield",
 				  hideLabel: true,
-				  value: "<br/><hr /><br/><h2>" + dgettext("plugin_autodelete", "delete_empty_subfolders") + "</h2></br>" +
+				  value: "<br/><hr /><br/><h2>" + dgettext("plugin_autodelete", "Delete empty subfolders") + "</h2></br>" +
 				         '<input type="checkbox" id="purge_empty" ' + (purge_empty==true ? 'checked' : '') + '/>' + '<br />'
 			}, {
 				xtype: "button",
@@ -120,11 +120,11 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteWidget = Ext.extend(Zarafa.
 	{
 		if (a.isPeriodOK) {
 		  this.updateSettings(this.settingsModel);
-		  Ext.Msg.alert(dgettext("plugin_autodelete", "save_box_title"), dgettext("plugin_autodelete", "save_message"));
+		  Ext.Msg.alert(dgettext("plugin_autodelete", "Settings saved"), dgettext("plugin_autodelete", "The setting has been saved."));
 		} else {
 			Zarafa.common.dialogs.MessageBox.show({
-				title: dgettext("plugin_autodelete", dgettext("plugin_autodelete", "error_box_title")),
-				msg: dgettext("plugin_autodelete", "save_error_message"),
+				title: dgettext("plugin_autodelete", dgettext("plugin_autodelete", "Error")),
+				msg: dgettext("plugin_autodelete", "Changes could not be saved."),
 				icon: Zarafa.common.dialogs.MessageBox.ERROR,
 				buttons: Zarafa.common.dialogs.MessageBox.OK,
 				scope: this,

@@ -16,7 +16,7 @@ Zarafa.plugins.autodelete.settings.SettingsAutodeleteCategory = Ext.extend(Zaraf
 	{
   	a = a || {};
 		Ext.applyIf(a, {
-			title: dgettext("plugin_autodelete", "category_title"),
+			title: dgettext("plugin_autodelete", "Automatic deletion"),
 			categoryIndex: 1,
 			iconCls: "icon_autodelete_category",
 			items: [{

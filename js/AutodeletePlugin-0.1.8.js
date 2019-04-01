@@ -48,7 +48,7 @@ Zarafa.plugins.autodelete.Autodelete = Ext.extend(Zarafa.core.Plugin, {
 Zarafa.onReady(function() {
 	container.registerPlugin(new Zarafa.core.PluginMetaData({
 		name : 'autodelete',
-		displayName : dgettext('plugin_autodelete', 'displayname'),
+		displayName : dgettext('plugin_autodelete', 'Plugin for automatic deletion'),
 		about: Zarafa.plugins.autodelete.ABOUT,
 		allowUserDisable : false,
 		pluginConstructor : Zarafa.plugins.autodelete.Autodelete
