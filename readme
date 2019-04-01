@@ -6,6 +6,9 @@ Tested on:
 
 Release notes:
 
+1.0.0
+- Sane english default titles for untranslated languages.
+
 0.1.8
 - Implement polish translation.
 
