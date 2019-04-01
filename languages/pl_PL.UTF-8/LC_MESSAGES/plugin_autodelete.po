@@ -19,15 +19,15 @@ msgstr ""
 
 #: js/AutodeletePlugin-0.1.8.js:51
 msgid "displayname"
-msgstr "wtyczka dla automatyczny deletion"
+msgstr "wtyczka dla automatyczny usunięcie"
 
 #: js/settings/SettingsAutodeleteCategory-0.1.8.js:19
 msgid "category_title"
-msgstr "Automatyczny deletion"
+msgstr "Automatyczny usunięcie"
 
 #: js/settings/SettingsAutodeleteWidget-0.1.8.js:24
 msgid "config_title"
-msgstr "Konfiguracja dla automatyczny deletion"
+msgstr "Konfiguracja dla automatyczny usunięcie"
 
 #: js/settings/SettingsAutodeleteWidget-0.1.8.js:29
 msgid "email"
