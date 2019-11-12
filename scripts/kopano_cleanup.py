@@ -181,8 +181,11 @@ scrub_folder.re = re.compile('IPM.Schedule')
 # process 'Junk E-Mail' and 'Deleted Items'
 #
 def scrub_junk(s, kt):
-  try:
-    for f in [s.junk, s.wastebasket]:
+  for f, n in [(s.junk, 'junk'), (s.wastebasket, 'wastebasket')]:
+    try:
+      if not f:
+        log(u'| NOTICE: folder {} missing'.format(n))
+        continue
       log(u'processing "{}"'.format(f.name))
       for i in f:
         p = i.prop(PR_LAST_MODIFICATION_TIME) 
@@ -190,9 +193,9 @@ def scrub_junk(s, kt):
           err(u'WARNING: missing last modification time property, object ignored')
         else:
           scrub_item(f, i, kt, p.value)
-  except Exception as e:
-    err(u'{} {}'.format(type(e), e))
-    err(u'ERROR: processing failed')
+    except Exception as e:
+      err(u'{} {}'.format(type(e), e))
+      err(u'ERROR: processing failed')
 
 # get value from settings and limit to max (or use default)
 #
