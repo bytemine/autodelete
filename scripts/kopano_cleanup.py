@@ -353,7 +353,8 @@ def main():
     except IOError as e:
       print 'Cannot open logfile:', e.args[1]
       exit(1)
-    log(' *** starting cleanup run ***')
+
+  log(' *** starting cleanup run ***')
 
   # iterate stores
   ks = kopano.Server()
@@ -370,12 +371,17 @@ def main():
       if s.orphan:
         err('Warning, orphaned store found: ' + s.guid)
         continue
-      if s.public and not opts.junk:
-        scrub_public(s, ks.multitenant)
+      if s.public:
+        if not opts.junk:
+          scrub_public(s, ks.multitenant)
+        else:
+          continue
       elif opts.public:
         continue
       else:
         scrub_store(s)
+
+  log(u'\n *** cleanup run finished ***')
 
   # done
   logfile.close()
