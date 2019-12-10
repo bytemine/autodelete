@@ -249,7 +249,10 @@ def user_settings(s, un):
 # postorder folder list
 #
 def fldlst(f):
-  return [x for ff in f.folders(recurse=False) for x in fldlst(ff)] + [f]
+  for i in f.folders(recurse=False):
+    for j in fldlst(i):
+      yield j
+    yield i
 
 
 # process one user store
