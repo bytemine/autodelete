@@ -12,6 +12,7 @@ import argparse
 import datetime
 import struct
 import resource
+import traceback
 
 from MAPI.Tags import PR_EC_WEBACCESS_SETTINGS_JSON, PR_LAST_MODIFICATION_TIME
 
@@ -85,15 +86,19 @@ def scrub_appointment(f, i, kt):
   try:
     if i.recurring:
       try:
-        ts = i.recurrence._end
+        ts = i.recurrence.end
       except Exception as e:
         err(u'{} {}'.format(type(e), e))
+        traceback.print_tb(sys.exc_info()[2], None, errfile)
         err(u'broken recurrence, ignoring appointment: {}'.format(i.subject))
         raise IgnObjException('appointment')
     else:
       ts = i.end
+  except IgnObjException:
+    raise
   except Exception as e:
     err(u'{} {}'.format(type(e), e))
+    traceback.print_tb(sys.exc_info()[2], None, errfile)
     err(u'ignoring broken appointment: {}'.format(i.subject))
     raise IgnObjException('appointment')
   scrub_item(f, i, kt, ts)
@@ -189,7 +194,7 @@ def scrub_junk(s, kt):
         continue
       log(u'processing "{}"'.format(f.name))
       for i in f:
-        p = i.prop(PR_LAST_MODIFICATION_TIME) 
+        p = i.prop(PR_LAST_MODIFICATION_TIME)
         if not p or not p.value:
           err(u'WARNING: missing last modification time property, object ignored')
         else:
@@ -269,7 +274,7 @@ def scrub_store(s):
   if opts.junk:
     log(u'| "{}" - Junk E-Mail & Deleted Items = {}'.format(un, us['junktrash']))
     scrub_junk(s, us['junktrash'])
-    logbar() 
+    logbar()
   else:
     log(u'| "{}" - note={}, task={}, appointment={}, purge_empty={}'.format(un, us['note'], us['task'], us['appointment'], us['purge_empty']))
     logbar()
