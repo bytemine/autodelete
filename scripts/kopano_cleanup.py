@@ -11,6 +11,7 @@ import kopano
 import argparse
 import datetime
 import struct
+import resource
 
 from MAPI.Tags import PR_EC_WEBACCESS_SETTINGS_JSON, PR_LAST_MODIFICATION_TIME
 
@@ -357,7 +358,13 @@ def main():
       print 'Cannot open logfile:', e.args[1]
       exit(1)
 
-  log(' *** starting cleanup run ***')
+  # limit mem usage to get exception instead of OOM-killer (128M)
+  soft, hard = resource.getrlimit(resource.RLIMIT_DATA)
+  if soft == -1 or soft > 2**27:
+    soft = 2**27
+    resource.setrlimit(resource.RLIMIT_DATA, (soft, hard))
+
+  log(u'\n *** starting cleanup run [ max heap = {}M ] ***'.format(int(soft/2**20)))
 
   # iterate stores
   ks = kopano.Server()
